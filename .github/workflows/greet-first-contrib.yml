@@ -4,7 +4,7 @@ on: [pull_request, issues]
 
 env:
   FIRST_PR_COMMENT: “# Thank you\nPlease be sure to read the `CONTRIBUTING.md` file located in the root of this repository”
-  
+
 jobs:
   greeting:
     runs-on: ubuntu-latest
@@ -12,5 +12,5 @@ jobs:
       - uses: actions/first-interaction@v1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          issue-messaage: ${{ secrets.FIRST_ISSUE_COMMENT }}
+          issue-message: ${{ secrets.FIRST_ISSUE_COMMENT }}
           pr-message: ${{ env.FIRST_PR_COMMENT }}
