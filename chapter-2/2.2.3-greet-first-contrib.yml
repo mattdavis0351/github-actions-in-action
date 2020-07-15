@@ -1,0 +1,15 @@
+name: Greet first time contributors
+
+on: [pull_request, issues]
+
+env:
+  FIRST_PR_COMMENT: “# Thank you\nPlease be sure to read the `CONTRIBUTING.md` file located in the root of this repository”
+jobs:
+  greeting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/first-interaction@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-messaage: ${{ secrets.FIRST_ISSUE_COMMENT }}
+          pr-message: ${{ env.FIRST_PR_COMMENT }}
