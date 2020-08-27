@@ -1,0 +1,26 @@
+name: Using outputs from a step
+
+on:
+  workflow_dispatch:
+    inputs:
+      person:
+        description: name of who you'd like to greet
+        required: true
+        default: "Manning book reader"
+
+jobs:
+  using-outputs:
+    name: Using step outputs
+    runs-on: ubuntu-latest
+    steps:
+      - name: A step that produces output
+        #the action below has an output named 'time'
+        uses: actions/hello-world-javascript-action@v1
+        id: step-with-output
+        with:
+          who-to-greet: ${{ github.event.inputs.person }}
+
+      - name: A step that output as input
+        #run statement uses the 'time' output from above
+        run: |
+          echo 'the time is: ${{ steps.step-with-output.outputs.time }}'
