@@ -20,7 +20,7 @@ jobs:
         with:
           who-to-greet: ${{ github.event.inputs.person }}
 
-      - name: A step that output as input
+      - name: A step that uses output as input
         #run statement uses the 'time' output from above
         run: |
           echo 'the time is: ${{ steps.step-with-output.outputs.time }}'
