@@ -1,0 +1,32 @@
+name: Sequential job runs
+
+on: workflow_dispatch
+
+jobs:
+  job-1:
+    name: First job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Job 1 first step
+        run: |
+          for i in {1..10}; do echo $i; sleep 2; done
+          echo "Job 1 has completed, Job 2 will now start"
+
+  job-2:
+    name: Second job
+    runs-on: ubuntu-latest
+    needs: [job-1]
+    steps:
+      - name: Job 2 first step
+        run: |
+          echo "Job two waited on the completion of Job 1"
+          for i in {1..10}; do echo $i; sleep 2; done
+
+  job-3:
+    name: Third job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Job 23first step
+        run: |
+          echo "Job three did not wait completion of Job 1 or Job 2"
+          for i in {1..10}; do echo $i; sleep 2; done
