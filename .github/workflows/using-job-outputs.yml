@@ -1,0 +1,46 @@
+name: Using outputs from a job
+
+on: workflow_dispatch
+
+jobs:
+  set-output:
+    name: A job to set output
+    runs-on: ubuntu-latest
+
+    outputs:
+      my-output: ${{ steps.step-with-output.outputs.time }}
+
+    steps:
+      - name: A step that produces output
+        uses: actions/hello-world-javascript-action@v1
+        id: step-with-output
+        with:
+          who-to-greet: "Manning Book Reader"
+
+  get-output:
+    name: A job that receives output as input
+    runs-on: ubuntu-latest
+
+    needs: [set-output]
+    outputs:
+      crumbs: ${{ steps.loaf.outputs.bread}}
+
+    steps:
+      - name: A step that uses output as input
+        run: |
+          echo 'the time is: ${{ needs.set-output.outputs.my-output }}'
+      - name: A step that sets even more job output
+        id: loaf
+        run: echo "::set-output name=bread::always bread"
+
+  even-more-output:
+    name: Depend on multiple jobs and output
+    runs-on: ubuntu-latest
+
+    needs: [set-output, get-output]
+
+    steps:
+      - name: A step using many outputs as input
+        run: |
+          echo "output from set-output job was: ${{ needs.set-output.outputs.my-output }}"
+          echo "output from get-output job was: ${{ needs.get-output.outputs.crumbs }}"
