@@ -1,0 +1,50 @@
+name: Managing workflow artifacts
+
+on: workflow_dispatch
+
+jobs:
+  job-1:
+    name: Uploads an artifact
+    runs-on: ubuntu-latest
+    steps:
+      - shell: bash
+        run: |
+          echo "hello from job 1" > greetings.txt
+      - name: Upload greeting file from job 1
+        uses: actions/upload-artifact@v2
+        with:
+          name: my-files
+          path: greetings.txt
+
+  job-2:
+    name: Changes and Saves the previous artifact
+    runs-on: macos-latest
+    needs: [job-1]
+    steps:
+      - name: Download greetings.txt from job 1
+        uses: actions/download-artifact@v2
+        with:
+          name: my-files
+      - shell: bash
+        run: |
+          echo "a change has been made by job 2" >> greetings.txt
+      - name: Upload math result for job 2
+        uses: actions/upload-artifact@v2
+        with:
+          name: my-files
+          path: greetings.txt
+
+  job-3:
+    name: Uses the final version of the artifact
+    runs-on: windows-latest
+    needs: [job-2]
+    steps:
+      - name: Download new greetings file from job 2
+        uses: actions/download-artifact@v2
+        with:
+          name: my-files
+      - name: Print the final result
+        shell: bash
+        run: |
+          value=`cat greetings.txt`
+          echo The resultng file is $value
